@@ -8,7 +8,7 @@ This repository contains a collection of various techniques and methods for bypa
     - Techniques like using caching mechanisms, changing request methods, bypassing refer checks, and more.
 2. [Misconfiguration-Related Bypasses](./Misconfiguration_Bypasses.md)
     - Examples of bypass methods caused by misconfiguration, such as response manipulation, status code tampering, and 2FA code leakage.
-3. [Twitter 2FA Bypass](./Twitter_2FA_Bypass.md)
+3. [Twitter 2FA Bypass](./Twitter.md)
     - Methods specific to bypassing Twitter’s 2FA process, including endpoint enumeration, OTP verification, and race conditions.
 4. [References](./References.md)
     - External references to articles and sources that explore these techniques in depth.
@@ -30,7 +30,7 @@ Focuses on bypass methods arising from misconfigurations:
 - **Status Code Manipulation**: Change status codes to bypass restrictions.
 - **2FA Code Reusability**: Leverage the ability to reuse 2FA codes.
 
-### 3. Twitter-Specific 2FA Bypass Techniques
+### 3. Twitter
 Investigates bypass techniques on Twitter:
 - **Endpoint enumeration**: Exploit the setup and verification endpoints.
 - **Race conditions**: Submit multiple login requests simultaneously to exploit timing vulnerabilities.
