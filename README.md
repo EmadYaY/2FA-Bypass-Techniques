@@ -107,6 +107,49 @@ This repository contains various methods and techniques for bypassing Two-Factor
 
 ## Comprehensive Checklist
 
+- Main Test Cases:
+    - [ ]  Test email activation link for automatic 2FA bypass
+    - [ ]  Check if password reset functionality bypasses 2FA
+    - [ ]  Attempt response manipulation (e.g., changing parameter values)
+    - [ ]  Try deleting or nullifying 2FA parameters in multi-step authentication
+    - [ ]  Access features without completing 2FA after initial login
+    - [ ]  Test API endpoints for user information retrieval without 2FA
+    - [ ]  Attempt user information updates without completing 2FA
+- Advanced Techniques:
+    - [ ]  Exploit caching mechanisms related to cookie policies
+    - [ ]  Change request methods to bypass 2FA (e.g., GET to POST)
+    - [ ]  Manipulate referrer headers to bypass 2FA checks
+    - [ ]  Test for missing 2FA code integrity validation
+    - [ ]  Attempt to use reset password endpoints to bypass 2FA
+- OTP Brute Force Scenarios:
+    - [ ]  Time-based limited environment: Distribute OTP attempts across multiple instances
+    - [ ]  IP-based restrictions: Utilize IP rotation services (e.g., AWS)
+    - [ ]  Rate-limited environment: Test case-sensitive variations in email addresses
+    - [ ]  Complex scenarios (time-limited, IP-based, with CAPTCHA):
+        - [ ]  Attempt CAPTCHA bypass techniques (OCR, nopecha.com)
+        - [ ]  Search for staging or development instances sharing the same database
+        - [ ]  Combine IP rotation with CAPTCHA bypass methods
+- Additional Test Cases:
+    - [ ]  Test for race conditions in login requests
+    - [ ]  Check for session fixation vulnerabilities
+    - [ ]  Analyze the OTP generation algorithm for predictability
+    - [ ]  Verify 2FA enforcement across all API endpoints
+    - [ ]  Investigate 2FA bypass through account linking
+    - [ ]  Test for subdomain takeover if 2FA is on a separate subdomain
+    - [ ]  Attempt time-based attacks on TOTP implementations
+    - [ ]  Verify 2FA persistence across different devices/browsers
+    - [ ]  Test 2FA in account recovery processes
+    - [ ]  Check if 2FA can be disabled without proper authentication
+    - [ ]  Investigate potential 2FA bypass in mobile app versions
+    - [ ]  Test 2FA enforcement in third-party integrations
+- Miscellaneous Checks:
+    - [ ]  Test backup code feature for potential abuse
+    - [ ]  Check for clickjacking vulnerabilities on 2FA disabling page
+    - [ ]  Verify if enabling 2FA expires previously active sessions
+    - [ ]  Attempt to bypass 2FA with null or 000000 as OTP
+    - [ ]  Test browser extensions' impact on 2FA functionality
+
+
 This summarized checklist includes all techniques for testing 2FA bypass vulnerabilities:
 
 - [ ] **Test Race Conditions**
