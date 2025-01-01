@@ -303,7 +303,7 @@ This summarized checklist includes all techniques for testing 2FA bypass vulnera
 - **Summary**: Allowing 2FA setup without verifying the registered email address.
 
 #### **37. Password Not Checked When Disabling 2FA**
-- **Summary**: Disabling 2FA without validating the password of the account.
+- **Summary**: Disabling 2FA without validating the account password.
 
 #### **38. Bypass Using Email MFA Mode**
 - **Summary**: Manipulating email-based MFA settings to bypass checks.
@@ -313,6 +313,11 @@ This summarized checklist includes all techniques for testing 2FA bypass vulnera
 
 ---
 
+## Some Other Methods And Refreness:
+   1. HowToHunt By Kathan Patel: [OTP ByPass](https://kathan19.gitbook.io/howtohunt/authentication-bypass/otp_bypass) 
+
+---
+
 ## Legal and Ethical Disclaimer
 
-This repository is intended solely for educational and research purposes to help improve system security. Unauthorized use of these techniques for illegal purposes is strictly prohibited. Always obtain permission before testing on any system. The misuse of the information contained in this repository may lead to criminal charges, and the creators are not responsible for any illegal activities that result from using this content.
+This repository is intended solely for educational and research purposes to help improve system security. Unauthorized use of these techniques for illegal purposes is strictly prohibited. Always obtain permission before testing on any system. Misusing the information in this repository may lead to criminal charges, and the creators are not responsible for any illegal activities resulting from using this content.
