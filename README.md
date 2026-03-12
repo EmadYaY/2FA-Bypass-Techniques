@@ -311,6 +311,91 @@ This summarized checklist includes all techniques for testing 2FA bypass vulnera
 #### **39. 2FA Bypass by Sending Blank Code**
 - **Summary**: Submitting a blank 2FA code to trick the server into bypassing the check.
 
+### **40. Client-Side OTP Validation**
+- **Summary**: In some applications, the OTP validation is performed on the client side using JavaScript instead of being verified securely on the server.
+- Attack Method
+- An attacker can intercept and modify the server response.
+- Example response:
+```sh
+{
+ "success": false
+}
+
+Modify it to:
+
+{
+ "success": true
+}
+```
+- If the application relies on this value, the OTP verification can be bypassed.
+
+### 41. **OTP Parameter Tampering**
+- **Summary**: Some applications allow the OTP delivery parameter (email or phone number) to be modified in the request.
+- Example request:
+```sh
+POST /send-otp
+phone=123456789
+
+Modified request:
+
+POST /send-otp
+phone=123456789,999999999
+```
+- or :
+```sh
+phone=attacker_phone
+```
+- The OTP may be sent to the attacker.
+
+### **42. Race Condition in OTP Verification**
+- **Summary**: A race condition occurs when multiple OTP verification requests are sent simultaneously.
+- Attack
+- Send multiple requests at the same time:
+```sh
+POST /verify
+otp=123456
+```
+. Tools often used
+. Turbo Intruder
+. Burp Repeater (parallel requests)
+. Custom scripts
+. One request may succeed before the server properly updates the verification state.
+
+### **43. OTP Length Manipulation**
+- **Summary**: Some servers fail to validate the OTP length properly.
+- Example valid OTP:
+```sh
+123456
+```
+- Test payloads:
+```sh
+1234567
+123456000
+123456%00
+123456.
+```
+- The server may truncate or incorrectly process the value.
+
+### **44. HTTP Parameter Pollution**
+- **Summary**: Sending multiple parameters with the same name can confuse backend parsers.
+- Example:
+```sh
+otp=000000&otp=123456
+```
+- or :
+```sh
+otp=123456&otp=
+```
+- Some frameworks process only the first or last value, which may allow bypassing validation.
+
+### **45. Predictable OTP Generation**
+- **Summary**: Poor OTP generation algorithms can produce predictable codes.
+- Example patterns:
+```
+100001
+100002
+100003
+```
 ---
 
 ## Some Other Methods And Refreness:
