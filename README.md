@@ -75,33 +75,67 @@ This repository contains various methods and techniques for bypassing Two-Factor
 ### 10. Missing 2FA Code Integrity Validation
 - **Summary**: Using a valid 2FA code from another account to bypass the victim's 2FA.
 
-### 11. Password Reset/Email Change - 2FA Disable
+### 11. MFA Challenge Context Binding
+- Summary: Testing whether an MFA challenge or verification token is correctly bound to the intended user, session, authentication transaction, and security-sensitive action.
+- Key Checks:
+  - Test whether a challenge created in one session can be verified in another session.
+  - Test whether a challenge can be used for another account.
+  - Test whether a verified challenge can be replayed against a different sensitive action.
+  - Verify that MFA completion cannot be detached from the intended authentication context.
+
+### 12. Password Reset/Email Change - 2FA Disable
 - **Summary**: Exploiting password reset or email change functions to bypass or disable 2FA.
 
-### 12. Re-sending Code and Reset Limit
+### 13. Re-sending Code and Reset Limit
 - **Summary**: Resetting the brute-force limit by resending the same code repeatedly.
 
-### 13. Leaked Token
+### 14. Leaked Token
 - **Summary**: Identifying tokens that are inadvertently leaked in the response or logs.
 
-### 14. Infinite OTP Regeneration
+### 15. Infinite OTP Regeneration
 - **Summary**: Generating OTPs indefinitely until one matches the required code.
 
-### 15. Subdomain Vulnerabilities
+### 16. Subdomain Vulnerabilities
 - **Summary**: Using outdated or vulnerable subdomains to bypass modern 2FA systems.
 
 ---
 
 ## Advanced Bypass Techniques
 
-### 16. Session Permission Attack
+### 17. Session Permission Attack
 - **Summary**: Exploiting session vulnerabilities to pass 2FA checks on a victim's account using attacker session data.
 
-### 17. Guessable Cookie Exploitation
+### 18. Guessable Cookie Exploitation
 - **Summary**: Exploiting weak cookie structures used in "remember me" features to bypass 2FA.
 
-### 18. IP Address Manipulation
+### 19. IP Address Manipulation
 - **Summary**: Impersonating a user's IP address using headers like `X-Forwarded-For`.
+
+### 20. Content-Type / Parser Differential Bypass
+- Summary: Testing whether changing the Content-Type causes the same logical request to be parsed or routed differently, potentially bypassing 2FA enforcement.
+- Key Checks:
+  - Test `application/json` vs `application/x-www-form-urlencoded`.
+  - Test `multipart/form-data` and other accepted content types.
+  - Test the same parameter as scalar, array, null, empty string, boolean, or numeric value where applicable.
+  - Verify that MFA validation is enforced consistently across all request representations.
+  - Check for alternate middleware, parser, or route behavior triggered by Content-Type changes.
+
+### 21. Duplicate Parameter / Parameter Pollution in MFA
+- Summary: Testing whether duplicate MFA parameters are interpreted differently by frontend, middleware, proxy, or backend components.
+- Key Checks:
+  - Test duplicate OTP/code parameters.
+  - Test duplicate user/account identifiers.
+  - Compare first-value and last-value parsing behavior.
+  - Test duplicate parameters across query string and request body.
+  - Check for parser inconsistencies between security middleware and application logic.
+
+### 22. Header-Based MFA Trust
+- Summary: Testing whether the application or an upstream component incorrectly trusts client-controlled headers to determine MFA verification state.
+- Key Checks:
+  - Identify headers related to MFA, authentication level, internal routing, or verification state.
+  - Determine whether such headers are accepted from untrusted clients.
+  - Compare behavior with and without suspected MFA-related headers.
+  - Check whether proxies, gateways, or backend services interpret these headers differently.
 
 ---
 
@@ -113,11 +147,19 @@ This repository contains various methods and techniques for bypassing Two-Factor
     - [ ]  Attempt response manipulation (e.g., changing parameter values)
     - [ ]  Try deleting or nullifying 2FA parameters in multi-step authentication
     - [ ]  Access features without completing 2FA after initial login
+    - [ ]  Skip individual MFA workflow steps and access subsequent steps directly
+    - [ ]  Replay a post-MFA request without completing the preceding verification step
+    - [ ]  Test whether workflow state can be advanced by directly invoking later endpoints
+    - [ ]  Test whether MFA completion state can be forged, omitted, reset, or downgraded between workflow steps
     - [ ]  Test API endpoints for user information retrieval without 2FA
     - [ ]  Attempt user information updates without completing 2FA
 - Advanced Techniques:
     - [ ]  Exploit caching mechanisms related to cookie policies
     - [ ]  Change request methods to bypass 2FA (e.g., GET to POST)
+    - [ ]  Test equivalent request representations across JSON, form, multipart, and other accepted encodings
+    - [ ]  Move 2FA-related parameters between body, query string, path, and headers where applicable
+    - [ ]  Test whether parameter location changes alter MFA enforcement
+    - [ ]  Compare server-side authorization/MFA behavior for semantically equivalent requests
     - [ ]  Manipulate referrer headers to bypass 2FA checks
     - [ ]  Test for missing 2FA code integrity validation
     - [ ]  Attempt to use reset password endpoints to bypass 2FA
@@ -129,19 +171,42 @@ This repository contains various methods and techniques for bypassing Two-Factor
         - [ ]  Attempt CAPTCHA bypass techniques (OCR, nopecha.com)
         - [ ]  Search for staging or development instances sharing the same database
         - [ ]  Combine IP rotation with CAPTCHA bypass methods
+
 - Additional Test Cases:
     - [ ]  Test for race conditions in login requests
     - [ ]  Check for session fixation vulnerabilities
     - [ ]  Analyze the OTP generation algorithm for predictability
     - [ ]  Verify 2FA enforcement across all API endpoints
+          - [ ] API endpoints, methods, Content-Types, parameter locations, API versions, and alternate routes
+    - [ ]  Verify 2FA enforcement across all HTTP methods
+    - [ ]  Verify 2FA enforcement across all parameter locations
+    - [ ]  Verify 2FA enforcement across alternate API versions and routes
+    - [ ]  Verify 2FA enforcement across web, mobile, and third-party API clients
+    - [ ]  Verify 2FA enforcement at the business-action execution layer
+    - [ ]  Verify 2FA enforcement across all accepted Content-Types
+    - [ ]  Verify MFA/2FA is bound to each sensitive business action, not only the authentication flow
+    - [ ]  Test whether sensitive actions remain protected across alternate routes, methods, and request representations
+    - [ ]  Test whether the same business operation can be reached through an endpoint that does not enforce MFA
+    - [ ]  Verify server-side MFA state is required at the point of sensitive action execution
     - [ ]  Investigate 2FA bypass through account linking
     - [ ]  Test for subdomain takeover if 2FA is on a separate subdomain
     - [ ]  Attempt time-based attacks on TOTP implementations
     - [ ]  Verify 2FA persistence across different devices/browsers
+    - [ ]  Test whether MFA verification on one device/session incorrectly authorizes sensitive actions in another session
+    - [ ]  Test cross-session and cross-device MFA state propagation
+    - [ ]  Verify that MFA state is bound to the intended authentication context
     - [ ]  Test 2FA in account recovery processes
+    - [ ]  Test alternative account-recovery methods for MFA bypass
+    - [ ]  Test recovery email, recovery phone, backup codes, trusted devices, and support-assisted recovery
+    - [ ]  Check whether account recovery changes MFA enforcement or authentication assurance
+    - [ ]  Verify that recovery tokens cannot be used to skip MFA on sensitive actions
     - [ ]  Check if 2FA can be disabled without proper authentication
     - [ ]  Investigate potential 2FA bypass in mobile app versions
     - [ ]  Test 2FA enforcement in third-party integrations
+    - [ ]  Test MFA method downgrade and fallback paths
+    - [ ]  Check whether stronger MFA methods can be replaced with weaker fallback methods
+    - [ ]  Verify that fallback methods enforce the same authentication assurance level
+    - [ ]  Test whether removing or modifying MFA method parameters changes the required verification flow
 - Miscellaneous Checks:
     - [ ]  Test backup code feature for potential abuse
     - [ ]  Check for clickjacking vulnerabilities on 2FA disabling page
@@ -241,74 +306,77 @@ This summarized checklist includes all techniques for testing 2FA bypass vulnera
 #### **16. Reusing Tokens**
 - **Summary**: Attempting to reuse tokens or one-time codes beyond their intended session scope.
 
-#### **17. Sharing Unused Tokens**
+#### **17. MFA Token Scope Confusion**
+- **Summary**: Testing whether MFA tokens are valid outside their intended scope.
+
+#### **18. Sharing Unused Tokens**
 - **Summary**: Using unused tokens from one account in another account to bypass 2FA.
 
-#### **18. Leaked Token**
+#### **19. Leaked Token**
 - **Summary**: Identifying tokens that are inadvertently leaked in the response or logs.
 
-#### **19. Session Permission Attack**
+#### **20. Session Permission Attack**
 - **Summary**: Exploiting session vulnerabilities to pass 2FA checks on a victim's account using attacker session data.
 
-#### **20. Password Reset Function Exploitation**
+#### **21. Password Reset Function Exploitation**
 - **Summary**: Abusing the password reset process to bypass 2FA and gain unauthorized access.
 
-#### **21. Lack of Rate Limit**
+#### **22. Lack of Rate Limit**
 - **Summary**: Checking if there are any limitations on the number of 2FA attempts.
 - **Example**: Testing silent rate limits by trying multiple incorrect codes followed by a correct one.
 
-#### **22. Flow Rate Limit but No Brute-Force Limit**
+#### **23. Flow Rate Limit but No Brute-Force Limit**
 - **Summary**: Bypassing rate limits through slow brute-forcing techniques.
 
-#### **23. Re-send Code and Reset Limit**
+#### **24. Re-send Code and Reset Limit**
 - **Summary**: Resetting the brute-force limit by resending the same code repeatedly.
 
-#### **24. Client-Side Rate Limit Bypass**
+#### **25. Client-Side Rate Limit Bypass**
 - **Summary**: Using client-side bypass techniques to overcome rate limitations.
 
-#### **25. Lack of Rate Limit Re-sending Code via SMS**
+#### **26. Lack of Rate Limit Re-sending Code via SMS**
 - **Summary**: Draining resources by continuously resending the 2FA code via SMS.
 
-#### **26. Infinite OTP Regeneration**
+#### **27. Infinite OTP Regeneration**
 - **Summary**: Generating OTPs indefinitely until one matches the required code.
 
-#### **27. Guessable Cookie**
+#### **28. Guessable Cookie**
 - **Summary**: Exploiting weak cookie structures used in "remember me" features.
 
-#### **28. IP Address Manipulation**
+#### **29. IP Address Manipulation**
 - **Summary**: Impersonating a user's IP address using headers like `X-Forwarded-For`.
 
-#### **29. Subdomain Vulnerabilities**
+#### **30. Subdomain Vulnerabilities**
 - **Summary**: Using outdated or vulnerable subdomains to bypass modern 2FA systems.
 
-#### **30. API Endpoint Testing**
+#### **31. API Endpoint Testing**
 - **Summary**: Finding insecure versions of API endpoints to bypass 2FA checks.
 
-#### **31. Previous Sessions Persistence**
+#### **32. Previous Sessions Persistence**
 - **Summary**: Ensuring that previous sessions are not terminated when 2FA is activated.
 
-#### **32. Improper Access Control to Backup Codes**
+#### **33. Improper Access Control to Backup Codes**
 - **Summary**: Stealing backup codes due to improper security controls.
 
-#### **33. Information Disclosure on 2FA Page**
+#### **34. Information Disclosure on 2FA Page**
 - **Summary**: Identifying sensitive information disclosed on the 2FA page.
 
-#### **34. Bypass 2FA with Null or 000000 Code**
+#### **35. Bypass 2FA with Null or 000000 Code**
 - **Summary**: Using null values or specific placeholder codes to bypass 2FA.
 
-#### **35. Previously Created Sessions Continue After MFA Activation**
+#### **36. Previously Created Sessions Continue After MFA Activation**
 - **Summary**: Persistence of old sessions after multi-factor authentication (MFA) is enabled.
 
-#### **36. Enable 2FA Without Email Verification**
+#### **37. Enable 2FA Without Email Verification**
 - **Summary**: Allowing 2FA setup without verifying the registered email address.
 
-#### **37. Password Not Checked When Disabling 2FA**
+#### **38. Password Not Checked When Disabling 2FA**
 - **Summary**: Disabling 2FA without validating the account password.
 
-#### **38. Bypass Using Email MFA Mode**
+#### **39. Bypass Using Email MFA Mode**
 - **Summary**: Manipulating email-based MFA settings to bypass checks.
 
-#### **39. 2FA Bypass by Sending Blank Code**
+#### **40. 2FA Bypass by Sending Blank Code**
 - **Summary**: Submitting a blank 2FA code to trick the server into bypassing the check.
 
 ---
